@@ -1,0 +1,33 @@
+{
+  "name": "techdegree-project-8",
+  "version": "1.0.0",
+  "description": "Front End Website Build with Gulp",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NMoore42/techdegree-project-8.git"
+  },
+  "keywords": [
+    "gulp",
+    "javascript",
+    "css",
+    "html"
+  ],
+  "author": "Nick Moore",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NMoore42/techdegree-project-8/issues"
+  },
+  "homepage": "https://github.com/NMoore42/techdegree-project-8#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1"
+  }
+}
