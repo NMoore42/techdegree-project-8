@@ -14,7 +14,7 @@ gulp.task('concatScripts', function () {
     'js/circle/circle.js',
     'js/global.js'])
   .pipe(concat('app.js'))
-  .pipe(gulp.dest('js'));
+  .pipe(gulp.dest('js')); 
 });
 
 gulp.task('minifyScripts', function () {
