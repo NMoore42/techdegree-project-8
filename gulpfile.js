@@ -14,48 +14,40 @@ sequence = require('run-sequence'),
   resize = require('gulp-images-resizer');
 
 //Concatenates JS files, creates map file, writes both to JS folder
-gulp.task('concatScripts', function () {
+gulp.task('scripts', function () {
   return gulp.src([
     'js/circle/autogrow.js',
     'js/circle/circle.js',
     'js/global.js'])
   .pipe(maps.init())
   .pipe(concat('app.js'))
+  .pipe(rename('all.min.js'))
+  .pipe(uglify())
   .pipe(maps.write('./'))
-  .pipe(gulp.dest('js'));
-});
-
-//Requires concatScripts as dependancy, minifys files and writes to dist/scripts
-gulp.task('scripts', ['concatScripts'], function () {
-  return gulp.src('js/app.js')
-    .pipe(uglify())
-    .pipe(rename('app.min.js'))
-    .pipe(gulp.dest('dist/scripts'));
+  .pipe(gulp.dest('dist/scripts'));
 });
 
 //Concatenates SCSS files, creates map file, writes both to css folder
-gulp.task('compileSass', function () {
+gulp.task('styles', function () {
   return gulp.src('sass/global.scss')
     .pipe(maps.init())
     .pipe(sass())
+    .pipe(rename('all.min.css'))
     .pipe(maps.write('./'))
-    .pipe(gulp.dest('css'))
+    .pipe(gulp.dest('dist/styles'))
     .pipe(bSync.reload({
       stream: true
     }));
 });
 
-//Requires compileSass as dependancy, minigys file and writes to dist/styles
-gulp.task('styles', ['compileSass'], function () {
-  return gulp.src('css/global.css')
-    .pipe(uglyCSS())
-    .pipe(rename('all.min.css'))
-    .pipe(gulp.dest('dist/styles'));
-});
-
 //Starts imagesJPG and imagesPNG
 gulp.task('images', function () {
-  return gulp.start(['imagesJPG', 'imagesPNG']);
+  return gulp.src('images/*')
+    .pipe(resize({
+      width: "25%",
+      height: "25%"
+    }))
+  .pipe(gulp.dest('dist/content'))
 });
 
 //Resizes JPG files in images folder, writes to dist/images
@@ -66,7 +58,7 @@ gulp.task('imagesJPG', function () {
       width: "25%",
       height: "25%"
     }))
-  .pipe(gulp.dest('dist/images'))
+  .pipe(gulp.dest('dist/content'))
 });
 
 //Resizes PNG files in images folder, writes to dist/images
@@ -76,7 +68,7 @@ gulp.task('imagesPNG', function () {
       width: "90%",
       height: "90%"
     }))
-  .pipe(gulp.dest('dist/images'))
+  .pipe(gulp.dest('dist/content'))
 });
 
 //Watches changes to scss files, envokes "styles" and reloads browser if changes detected
@@ -86,7 +78,7 @@ gulp.task('watchSass', ['browserSync', 'styles'], function () {
 
 //Cleans
 gulp.task('clean', function () {
-   del(['dist', 'css/*', 'js/app*.js*']);
+  return del(['dist', 'css/*', 'js/app*.js*']);
 });
 
 //Reloads broswer
@@ -98,18 +90,18 @@ gulp.task('browserSync', function () {
   })
 });
 
-//Calls prebuild task, directs index.html and icons to dist folder
-gulp.task('build', ['preBuild'], function (){
+//Add index file and icons to dist folder
+gulp.task('addFiles', function () {
   return gulp.src(['index.html', 'icons/**'], { base: './' })
     .pipe(gulp.dest('dist'));
 });
 
-//Sequencially cleans, then runs 'scripts', 'styles', 'images'
-gulp.task('preBuild', function () {
-  return sequence('clean', ['scripts', 'styles', 'images'])
+//Calls prebuild task, directs index.html and icons to dist folder
+gulp.task('build', ['clean'], function (){
+  return sequence('scripts', 'styles', 'images', 'addFiles');
 });
 
 //Default gulp
-gulp.task('default', function () {
-  return sequence('build', 'watchSass')
+gulp.task('default', ['clean'], function () {
+    return sequence('scripts', 'styles', 'images', 'addFiles', 'watchSass');
 });
