@@ -40,33 +40,12 @@ gulp.task('styles', function () {
     }));
 });
 
-//Starts imagesJPG and imagesPNG
+//Resizes JPG and PNG files and writes to dist/images.
 gulp.task('images', function () {
   return gulp.src('images/*')
     .pipe(resize({
       width: "25%",
       height: "25%"
-    }))
-  .pipe(gulp.dest('dist/content'))
-});
-
-//Resizes JPG files in images folder, writes to dist/images
-gulp.task('imagesJPG', function () {
-  return gulp.src('images/*.jpg')
-    .pipe(resize({
-      format: 'jpg',
-      width: "25%",
-      height: "25%"
-    }))
-  .pipe(gulp.dest('dist/content'))
-});
-
-//Resizes PNG files in images folder, writes to dist/images
-gulp.task('imagesPNG', function () {
-  return gulp.src('images/*.png')
-    .pipe(resize({
-      width: "90%",
-      height: "90%"
     }))
   .pipe(gulp.dest('dist/content'))
 });
@@ -78,7 +57,7 @@ gulp.task('watchSass', ['browserSync', 'styles'], function () {
 
 //Cleans
 gulp.task('clean', function () {
-  return del(['dist', 'css/*', 'js/app*.js*']);
+  return del(['dist']);
 });
 
 //Reloads broswer
